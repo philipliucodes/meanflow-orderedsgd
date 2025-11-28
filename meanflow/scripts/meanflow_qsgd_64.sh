@@ -39,7 +39,7 @@ torchrun --standalone --nproc_per_node=8 --master_port=12345 \
     --batch_size=128 \
     --lr=0.0006 \
     --eval_frequency=200 \
-    --epochs=400 \
+    --epochs=3200 \
     --compute_fid \
     --log_per_step=100 \
     --tr_sampler=v1 \
