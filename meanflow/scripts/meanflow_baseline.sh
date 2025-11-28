@@ -55,4 +55,4 @@ torchrun --standalone --nproc_per_node=8 --master_port=12345 \
     --not_compile \
     --method 0
     
-echo "Finished. Outputs saved in: $(realpath "$OUTPUT_DIR")"
+echo "Outputs saved in: $(realpath "$OUTPUT_DIR")"
