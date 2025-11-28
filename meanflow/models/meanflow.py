@@ -63,7 +63,15 @@ class MeanFlow(nn.Module):
             adp_wt = (loss.detach() + self.args.norm_eps) ** self.args.norm_p
             loss = loss / adp_wt
 
-            loss = loss.mean()  # mean over batch dimension
+            ssize = self.args.ssize
+            batch_size = loss.size(0)
+
+            if self.args.method == 0:
+                # standard SGD
+                loss = torch.mean(loss)
+            else:
+                # ordered SGD
+                loss = torch.mean(torch.topk(loss, min(ssize, batch_size), sorted=False, dim=0)[0])
         
         return loss
     
