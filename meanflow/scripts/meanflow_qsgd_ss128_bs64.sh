@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=meanflow_qsgd_128
+#SBATCH --job-name=meanflow_qsgd_ss128_bs64
 #SBATCH --account=aarc
 #SBATCH --partition=ai
 #SBATCH --qos=preemptible
@@ -27,7 +27,7 @@ echo "MASTER_ADDR: $MASTER_ADDR"
 echo "MASTER_PORT: $MASTER_PORT"
 echo "SLURM_GPUS_PER_NODE: $SLURM_GPUS_PER_NODE"
 
-EXP_NAME="qsgd_128"
+EXP_NAME="qsgd_ss128_bs64"
 OUTPUT_DIR="tmp/${EXP_NAME}_job${SLURM_JOB_ID}"
 
 mkdir -p "$OUTPUT_DIR"
