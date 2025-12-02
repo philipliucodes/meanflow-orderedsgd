@@ -67,6 +67,13 @@ def get_data_loader(args, is_for_fid):
         )
     else:
         raise NotImplementedError(f"Unsupported dataset {args.dataset}")
+    
+    if not is_for_fid and args.dataset_size > 0:
+        g = torch.Generator()
+        g.manual_seed(args.seed)
+        indices = torch.randperm(len(dataset), generator=g)[:min(args.dataset_size, len(dataset))]
+
+        dataset = torch.utils.data.Subset(dataset, indices)
 
     logger.info(dataset)
 
