@@ -72,7 +72,7 @@ def get_args_parser():
     parser.add_argument("--not_compile", action="store_false", dest="compile", default=True, help="Disable compilation.")
 
     # Ordered SGD settings
-    parser.add_argument('--ssize', type=int, default=64) 
+    parser.add_argument('--ssize', type=int, default=128) 
     parser.add_argument('--method', type=int, default=0) 
                         # --method=0: standard
                         # --method=1: q-SGD 

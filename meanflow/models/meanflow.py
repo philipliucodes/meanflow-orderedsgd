@@ -22,6 +22,13 @@ class MeanFlow(nn.Module):
         for i, ema_decay in enumerate(self.ema_decays):
             self.add_module(f"net_ema{i + 1}", init_ema(self.net, arch(**net_configs), ema_decay))
 
+        # expose current epoch
+        self.epoch = 0
+
+        # track fid progression
+        self.fid0 = None
+        self.fid = None
+
     def update_ema(self):
         self.num_updates += 1
         # num_updates = self.num_updates.item()
@@ -67,11 +74,39 @@ class MeanFlow(nn.Module):
             batch_size = loss.size(0)
 
             if self.args.method == 0:
-                # standard SGD
+                # baseline SGD
                 loss = torch.mean(loss)
             else:
                 # ordered SGD
+                if self.args.method == 1:
+                    # constant q
+                    pass
+                elif self.args.method == 2:
+                    # epoch-based q
+                    epoch_progress = float(self.epoch + 1) / float(self.args.epochs)
+                    if epoch_progress >= 0.875 and ssize > batch_size // 8:
+                        ssize = max(1, batch_size // 8)
+                    elif epoch_progress >= 0.75 and ssize > batch_size // 4:
+                        ssize = max(1, batch_size // 4)
+                    elif epoch_progress >= 0.50 and ssize > batch_size // 2:
+                        ssize = max(1, batch_size // 2)
+                elif self.args.method == 3:
+                    # fid-based q
+                    if self.fid0 is None:
+                        self.fid0 = self.fid
+                    else:
+                        fid_progress = 100.0 * (self.fid0 - self.fid) / self.fid0
+                        if fid_progress >= 99.0 and ssize > batch_size // 16:
+                            ssize = max(1, batch_size // 16)
+                        elif fid_progress >= 97.0 and ssize > batch_size // 8:
+                            ssize = max(1, batch_size // 8)
+                        elif fid_progress >= 94.0 and ssize > batch_size // 4:
+                            ssize = max(1, batch_size // 4)
+                        elif fid_progress >= 90.0 and ssize > batch_size // 2:
+                            ssize = max(1, batch_size // 2)
+
                 loss = torch.mean(torch.topk(loss, min(ssize, batch_size), sorted=False, dim=0)[0])
+                self.ssize = ssize
         
         return loss
     

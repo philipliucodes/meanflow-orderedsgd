@@ -200,6 +200,8 @@ def main(args):
     for epoch in range(args.start_epoch, args.epochs):
         if args.distributed:
             data_loader_train.sampler.set_epoch(epoch)
+        # pass current epoch to model
+        model_without_ddp.epoch = epoch
         if not args.eval_only:
             train_one_epoch(
                 model=model,
@@ -236,6 +238,8 @@ def main(args):
             if log_writer is not None and "fid" in eval_stats:
                 logging.info(f"Eval {epoch + 1} epochs finished: FID_ema{ema_decay}: {eval_stats['fid']}")
                 log_writer.add_scalar(f"FID_ema{ema_decay}", eval_stats["fid"], epoch + 1)
+                # pass current fid to model
+                model_without_ddp.fid = eval_stats['fid']
 
             # Eval extra ema model:
             for i in range(len(model_without_ddp.ema_decays)):

@@ -151,6 +151,7 @@ def train_one_epoch(
                 "epoch": steps / len(data_loader),
                 "steps": steps,
                 "sec_per_iter": sec_per_iter,
+                "ssize": model_without_ddp.ssize,
             }
             if log_writer is not None:
                 for k, v in metrics.items():
