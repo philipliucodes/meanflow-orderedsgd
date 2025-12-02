@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=meanflow_qsgd_ss128_bs64
+#SBATCH --job-name=meanflow_baseline_bs128
 #SBATCH --account=aarc
 #SBATCH --partition=ai
 #SBATCH --qos=preemptible
@@ -8,7 +8,7 @@
 #SBATCH --gpus-per-node=8
 #SBATCH --cpus-per-task=14
 #SBATCH --mem=384G
-#SBATCH --time=20:00:00
+#SBATCH --time=16:00:00
 #SBATCH --output=%x_%j.out
 #SBATCH --error=%x_%j.err
 
@@ -27,7 +27,7 @@ echo "MASTER_ADDR: $MASTER_ADDR"
 echo "MASTER_PORT: $MASTER_PORT"
 echo "SLURM_GPUS_PER_NODE: $SLURM_GPUS_PER_NODE"
 
-EXP_NAME="qsgd_ss128_bs64"
+EXP_NAME="baseline"
 OUTPUT_DIR="tmp/${EXP_NAME}_job${SLURM_JOB_ID}"
 
 mkdir -p "$OUTPUT_DIR"
@@ -36,7 +36,7 @@ torchrun --standalone --nproc_per_node=8 --master_port=12345 \
     train.py \
     --output_dir="$OUTPUT_DIR" \
     --dataset=cifar10 \
-    --batch_size=64 \
+    --batch_size=128 \
     --lr=0.0006 \
     --eval_frequency=200 \
     --epochs=1600 \
@@ -53,7 +53,6 @@ torchrun --standalone --nproc_per_node=8 --master_port=12345 \
     --dropout 0.2 \
     --use_edm_aug \
     --not_compile \
-    --method 1 \
-    --ssize 128
+    --method 0
     
 echo "Outputs saved in: $(realpath "$OUTPUT_DIR")"
