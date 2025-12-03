@@ -73,6 +73,20 @@ class MeanFlow(nn.Module):
             adp_wt = (loss.detach() + self.args.norm_eps) ** self.args.norm_p
             loss = loss / adp_wt
 
+            # summary statistics
+            loss_det = loss.detach()
+            loss_min = loss_det.min().item()
+            loss_max = loss_det.max().item()
+            loss_mean = loss_det.mean().item()
+            loss_std = loss_det.std().item()
+
+            if self.num_updates % 100 == 0:
+                print(
+                    f"[loss stats] epoch={self.epoch} "
+                    f"min={loss_min:.4f} max={loss_max:.4f} "
+                    f"mean={loss_mean:.4f} std={loss_std:.4f}"
+                )
+
             ssize = self.ssize
             batch_size = loss.size(0)
 
