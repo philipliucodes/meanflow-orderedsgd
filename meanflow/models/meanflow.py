@@ -29,6 +29,9 @@ class MeanFlow(nn.Module):
         self.fid0 = None
         self.fid = None
 
+        # maintain q value
+        self.ssize = args.ssize
+
     def update_ema(self):
         self.num_updates += 1
         # num_updates = self.num_updates.item()
@@ -70,7 +73,7 @@ class MeanFlow(nn.Module):
             adp_wt = (loss.detach() + self.args.norm_eps) ** self.args.norm_p
             loss = loss / adp_wt
 
-            ssize = self.args.ssize
+            ssize = self.ssize
             batch_size = loss.size(0)
 
             if self.args.method == 0:
