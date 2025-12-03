@@ -142,7 +142,7 @@ def train_one_epoch(
             batch_time.reset()
             batch_loss.reset()
             logger.info(
-                f"Epoch {epoch} [{data_iter_step}/{len(data_loader)}]: loss = {loss_ave:.6f}, lr = {lr:.6f}, steps = {steps}, sec_per_iter = {sec_per_iter:.4f}"
+                f"Epoch {epoch} [{data_iter_step}/{len(data_loader)}]: loss = {loss_ave:.6f}, lr = {lr:.6f}, steps = {steps}, sec_per_iter = {sec_per_iter:.4f}, ssize = {model_without_ddp.ssize}"
             )
             epoch_1000x = int(steps / len(data_loader) * 1000)
             metrics = {
