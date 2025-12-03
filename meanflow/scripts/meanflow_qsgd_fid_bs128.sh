@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=meanflow_baseline_bs128
+#SBATCH --job-name=meanflow_qsgd_fid_bs128
 #SBATCH --account=aarc
 #SBATCH --partition=ai
 #SBATCH --qos=preemptible
@@ -27,7 +27,7 @@ echo "MASTER_ADDR: $MASTER_ADDR"
 echo "MASTER_PORT: $MASTER_PORT"
 echo "SLURM_GPUS_PER_NODE: $SLURM_GPUS_PER_NODE"
 
-EXP_NAME="baseline_bs128"
+EXP_NAME="qsgd_fid_bs128"
 OUTPUT_DIR="tmp/${EXP_NAME}_job${SLURM_JOB_ID}"
 
 mkdir -p "$OUTPUT_DIR"
@@ -37,8 +37,9 @@ torchrun --standalone --nproc_per_node=8 --master_port=12345 \
     --output_dir="$OUTPUT_DIR" \
     --dataset=cifar10 \
     --batch_size=128 \
+    --seed=0 \
     --lr=0.0006 \
-    --eval_frequency=200 \
+    --eval_frequency=100 \
     --epochs=3200 \
     --compute_fid \
     --log_per_step=100 \
@@ -53,6 +54,7 @@ torchrun --standalone --nproc_per_node=8 --master_port=12345 \
     --dropout 0.2 \
     --use_edm_aug \
     --not_compile \
-    --method 0
+    --method 3 \
+    --ssize 128
     
 echo "Outputs saved in: $(realpath "$OUTPUT_DIR")"
