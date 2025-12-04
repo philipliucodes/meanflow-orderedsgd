@@ -8,7 +8,7 @@
 #SBATCH --gpus-per-node=8
 #SBATCH --cpus-per-task=14
 #SBATCH --mem=384G
-#SBATCH --time=24:00:00
+#SBATCH --time=08:00:00
 #SBATCH --output=%x_%j.out
 #SBATCH --error=%x_%j.err
 
@@ -41,7 +41,7 @@ torchrun --standalone --nproc_per_node=8 --master_port=12345 \
     --seed=0 \
     --lr=0.0006 \
     --eval_frequency=200 \
-    --epochs=12000 \
+    --epochs=3200 \
     --compute_fid \
     --log_per_step=100 \
     --tr_sampler=v1 \
