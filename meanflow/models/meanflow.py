@@ -80,7 +80,7 @@ class MeanFlow(nn.Module):
             loss_mean = loss_det.mean().item()
             loss_std = loss_det.std().item()
 
-            if self.num_updates % 100 == 0:
+            if self.epoch % self.args.eval_frequency == 0:
                 print(
                     f"[loss stats] epoch={self.epoch} "
                     f"min={loss_min:.4f} max={loss_max:.4f} "
