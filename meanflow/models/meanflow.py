@@ -109,8 +109,8 @@ class MeanFlow(nn.Module):
                     elif epoch_progress >= 0.50 and ssize > batch_size // 2:
                         ssize = max(1, batch_size // 2)
                     """
-                    if epoch_progress >= 0.75 and ssize > batch_size // 2:
-                        ssize = max(1, batch_size // 2)
+                    if epoch_progress >= 0.75 and ssize > batch_size // 1.25:
+                        ssize = max(1, batch_size // 1.25)
                 elif self.args.method == 3:
                     # fid-based q
                     if self.fid0 is None:
@@ -127,8 +127,8 @@ class MeanFlow(nn.Module):
                         elif fid_progress >= 90.0 and ssize > batch_size // 2:
                             ssize = max(1, batch_size // 2)
                         """
-                        if fid_progress >= 95.0 and ssize > batch_size // 2:
-                            ssize = max(1, batch_size // 2)
+                        if fid_progress >= 95.0 and ssize > batch_size // 1.25:
+                            ssize = max(1, batch_size // 1.25)
 
                 loss = torch.mean(torch.topk(loss, min(ssize, batch_size), sorted=False, dim=0)[0])
                 self.ssize = ssize
